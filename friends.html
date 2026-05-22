@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox Friends - shinplaygame</title>
+    <!-- นำเข้า Font สไตล์โมเดิร์น -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- Reset & Base Styles --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #0e1013; /* โทนสีมืดสไตล์ Gaming */
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* --- Main Container --- */
+        .container {
+            width: 100%;
+            max-width: 950px;
+            background: rgba(25, 28, 34, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        /* --- Header Section --- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #00b4db, #0083b0);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 0 15px rgba(0, 180, 219, 0.4);
+        }
+
+        .user-info h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .user-info p {
+            font-size: 13px;
+            color: #8a9099;
+            margin-top: 2px;
+        }
+
+        .friend-count {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #38ef7d;
+            border: 1px solid rgba(56, 239, 125, 0.2);
+        }
+
+        /* --- Grid System --- */
+        .friends-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        /* --- Friend Card Styles --- */
+        .friend-card {
+            background: #1d2129;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid transparent;
+        }
+
+        .friend-card:hover {
+            transform: translateY(-5px);
+            background: #242933;
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Avatar Container & Status Indicator */
+        .avatar-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+        }
+
+        .friend-avatar {
+            width: 100%;
+            height: 100%;
+            background: #2a2f3b;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 32px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .status-dot {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 3px solid #1d2129;
+        }
+
+        /* Dynamic Status Colors */
+        .online { background-color: #2ecc71; box-shadow: 0 0 10px #2ecc71; }
+        .offline { background-color: #95a5a6; }
+        .in-game { background-color: #00b4db; box-shadow: 0 0 10px #00b4db; }
+
+        /* Typography inside Cards */
+        .friend-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .friend-username {
+            font-size: 12px;
+            color: #8a9099;
+            margin-top: 3px;
+            margin-bottom: 12px;
+        }
+
+        .status-text {
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .status-text.online-txt { color: #2ecc71; }
+        .status-text.offline-txt { color: #8a9099; }
+        .status-text.in-game-txt { color: #00b4db; font-weight: 600; }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 500px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .friend-count {
+                align-self: flex-end;
+            }
+            .friends-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 12px;
+            }
+            .friend-card {
+                padding: 15px 10px;
+            }
+            .avatar-container {
+                width: 65px;
+                height: 65px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- ส่วนหัวแสดงโปรไฟล์หลัก -->
+        <div class="header">
+            <div class="user-profile">
+                <div class="user-avatar">S</div>
+                <div class="user-info">
+                    <h1>shinplaygame</h1>
+                    <p>Roblox Developer & Player</p>
+                </div>
+            </div>
+            <div class="friend-count">เพื่อนทั้งหมด: 4 คน</div>
+        </div>
+
+        <!-- ส่วนกริดรายชื่อเพื่อน -->
+        <div class="friends-grid">
+            
+            <!-- เพื่อนคนที่ 1: สถานะ กำลังเล่นเกม -->
+            <div class="friend-card">
+                <div class="avatar-container">
+                    <div class="friend-avatar">🦊</div>
+                    <div class="status-dot in-game"></div>
+                </div>
+                <div class="friend-name">xX_DarkKnight_Xx</div>
+                <div class="friend-username">@dark_knight2026</div>
+                <div class="status-text in-game-txt">ในเกม: Blox Fruits</div>
+            </div>
+
+            <!-- เพื่อนคนที่ 2: สถานะ ออนไลน์ -->
+            <div class="friend-card">
+                <div class="avatar-container">
+                    <div class="friend-avatar">🐱</div>
+                    <div class="status-dot online"></div>
+                </div>
+                <div class="friend-name">MochiNeko</div>
+                <div class="friend-username">@mochi_neko</div>
+                <div class="status-text online-txt">ออนไลน์</div>
+            </div>
+
+            <!-- เพื่อนคนที่ 3: สถานะ ออฟไลน์ -->
+            <div class="friend-card">
+                <div class="avatar-container">
+                    <div class="friend-avatar">🤖</div>
+                    <div class="status-dot offline"></div>
+                </div>
+                <div class="friend-name">BuildMaster_TH</div>
+                <div class="friend-username">@builder_th</div>
+                <div class="status-text offline-txt">ออฟไลน์เมื่อ 2 ชม.ที่แล้ว</div>
+            </div>
+
+            <!-- เพื่อนคนที่ 4: สถานะ กำลังเล่นเกม -->
+            <div class="friend-card">
+                <div class="avatar-container">
+                    <div class="friend-avatar">👑</div>
+                    <div class="status-dot in-game"></div>
+                </div>
+                <div class="friend-name">ZeedZaza</div>
+                <div class="friend-username">@zeed_zaza_pro</div>
+                <div class="status-text in-game-txt">ในเกม: BedWars</div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
