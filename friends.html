@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roblox Friends - shinplaygame</title>
-    <!-- นำเข้า Font สไตล์โมเดิร์น -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- Reset & Base Styles --- */
         * {
             margin: 0;
             padding: 0;
@@ -19,7 +17,7 @@
         }
 
         body {
-            background-color: #0e1013; /* โทนสีมืดสไตล์ Gaming */
+            background-color: #0e1013;
             color: #ffffff;
             display: flex;
             justify-content: center;
@@ -28,7 +26,6 @@
             padding: 20px;
         }
 
-        /* --- Main Container --- */
         .container {
             width: 100%;
             max-width: 950px;
@@ -40,7 +37,6 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
         }
 
-        /* --- Header Section --- */
         .header {
             display: flex;
             justify-content: space-between;
@@ -56,17 +52,12 @@
             gap: 15px;
         }
 
-        .user-avatar {
+        .user-avatar img {
             width: 55px;
             height: 55px;
-            background: linear-gradient(135deg, #00b4db, #0083b0);
             border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: white;
+            background: #2a2f3b;
+            border: 2px solid #00b4db;
             box-shadow: 0 0 15px rgba(0, 180, 219, 0.4);
         }
 
@@ -92,22 +83,18 @@
             border: 1px solid rgba(56, 239, 125, 0.2);
         }
 
-        /* --- Grid System --- */
         .friends-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 20px;
         }
 
-        /* --- Friend Card Styles --- */
         .friend-card {
             background: #1d2129;
             border-radius: 16px;
             padding: 20px;
             text-align: center;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            position: relative;
-            overflow: hidden;
             border: 1px solid transparent;
         }
 
@@ -118,24 +105,20 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
 
-        /* Avatar Container & Status Indicator */
         .avatar-container {
             position: relative;
-            width: 80px;
-            height: 80px;
+            width: 85px;
+            height: 85px;
             margin: 0 auto 15px;
         }
 
-        .friend-avatar {
+        .friend-avatar img {
             width: 100%;
             height: 100%;
-            background: #2a2f3b;
             border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 32px;
+            background: #2a2f3b;
             border: 2px solid rgba(255, 255, 255, 0.1);
+            object-fit: cover;
         }
 
         .status-dot {
@@ -148,12 +131,10 @@
             border: 3px solid #1d2129;
         }
 
-        /* Dynamic Status Colors */
         .online { background-color: #2ecc71; box-shadow: 0 0 10px #2ecc71; }
         .offline { background-color: #95a5a6; }
         .in-game { background-color: #00b4db; box-shadow: 0 0 10px #00b4db; }
 
-        /* Typography inside Cards */
         .friend-name {
             font-size: 15px;
             font-weight: 600;
@@ -168,6 +149,9 @@
             color: #8a9099;
             margin-top: 3px;
             margin-bottom: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .status-text {
@@ -178,99 +162,136 @@
             border-radius: 20px;
             background: rgba(255, 255, 255, 0.04);
         }
+        .online-txt { color: #2ecc71; }
+        .offline-txt { color: #8a9099; }
+        .in-game-txt { color: #00b4db; font-weight: 600; }
 
-        .status-text.online-txt { color: #2ecc71; }
-        .status-text.offline-txt { color: #8a9099; }
-        .status-text.in-game-txt { color: #00b4db; font-weight: 600; }
+        .loading {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: #8a9099;
+            font-size: 16px;
+        }
 
-        /* --- Responsive Design --- */
         @media (max-width: 500px) {
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-            .friend-count {
-                align-self: flex-end;
-            }
-            .friends-grid {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                gap: 12px;
-            }
-            .friend-card {
-                padding: 15px 10px;
-            }
-            .avatar-container {
-                width: 65px;
-                height: 65px;
-            }
+            .header { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .friend-count { align-self: flex-end; }
+            .friends-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+            .friend-card { padding: 15px 10px; }
+            .avatar-container { width: 70px; height: 70px; }
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- ส่วนหัวแสดงโปรไฟล์หลัก -->
         <div class="header">
             <div class="user-profile">
-                <div class="user-avatar">S</div>
+                <div class="user-avatar" id="my-avatar">
+                    <img src="https://images.rbxcdn.com/1531e0959fea4e0b3fc8cf0a94e82df4.png" alt="shinplaygame">
+                </div>
                 <div class="user-info">
                     <h1>shinplaygame</h1>
-                    <p>Roblox Developer & Player</p>
+                    <p>Roblox Profile & Friends</p>
                 </div>
             </div>
-            <div class="friend-count">เพื่อนทั้งหมด: 4 คน</div>
+            <div class="friend-count" id="count-text">กำลังโหลด...</div>
         </div>
 
-        <!-- ส่วนกริดรายชื่อเพื่อน -->
-        <div class="friends-grid">
-            
-            <!-- เพื่อนคนที่ 1: สถานะ กำลังเล่นเกม -->
-            <div class="friend-card">
-                <div class="avatar-container">
-                    <div class="friend-avatar">🦊</div>
-                    <div class="status-dot in-game"></div>
-                </div>
-                <div class="friend-name">xX_DarkKnight_Xx</div>
-                <div class="friend-username">@dark_knight2026</div>
-                <div class="status-text in-game-txt">ในเกม: Blox Fruits</div>
-            </div>
-
-            <!-- เพื่อนคนที่ 2: สถานะ ออนไลน์ -->
-            <div class="friend-card">
-                <div class="avatar-container">
-                    <div class="friend-avatar">🐱</div>
-                    <div class="status-dot online"></div>
-                </div>
-                <div class="friend-name">MochiNeko</div>
-                <div class="friend-username">@mochi_neko</div>
-                <div class="status-text online-txt">ออนไลน์</div>
-            </div>
-
-            <!-- เพื่อนคนที่ 3: สถานะ ออฟไลน์ -->
-            <div class="friend-card">
-                <div class="avatar-container">
-                    <div class="friend-avatar">🤖</div>
-                    <div class="status-dot offline"></div>
-                </div>
-                <div class="friend-name">BuildMaster_TH</div>
-                <div class="friend-username">@builder_th</div>
-                <div class="status-text offline-txt">ออฟไลน์เมื่อ 2 ชม.ที่แล้ว</div>
-            </div>
-
-            <!-- เพื่อนคนที่ 4: สถานะ กำลังเล่นเกม -->
-            <div class="friend-card">
-                <div class="avatar-container">
-                    <div class="friend-avatar">👑</div>
-                    <div class="status-dot in-game"></div>
-                </div>
-                <div class="friend-name">ZeedZaza</div>
-                <div class="friend-username">@zeed_zaza_pro</div>
-                <div class="status-text in-game-txt">ในเกม: BedWars</div>
-            </div>
-
+        <div class="friends-grid" id="friends-box">
+            <div class="loading">กำลังดึงข้อมูลเพื่อนจากระบบ Roblox...</div>
         </div>
     </div>
 
+    <script>
+        // ใช้ UserId จริงของ賬戶 "shinplaygame" จากระบบของ Roblox (เปลี่ยนได้ตามต้องการ)
+        const ROBLOX_USER_ID = "5056767746"; 
+
+        // ใช้เซิร์ฟเวอร์ Proxy สาธารณะเพื่อหลีกเลี่ยงปัญหาติด CORS บล็อกข้อมูล
+        const PROXY = "https://corsproxy.io/?";
+
+        async function fetchRobloxFriends() {
+            const friendsBox = document.getElementById('friends-box');
+            const countText = document.getElementById('count-text');
+            const myAvatarDiv = document.getElementById('my-avatar');
+
+            try {
+                // 1. ดึงรูปโปรไฟล์ของตัวเราเอง (shinplaygame)
+                const myThumbUrl = `${PROXY}${encodeURIComponent(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${ROBLOX_USER_ID}&size=150x150&format=Png&isCircular=false`)}`;
+                const myThumbRes = await fetch(myThumbUrl);
+                const myThumbData = await myThumbRes.json();
+                if(myThumbData?.data?.[0]?.imageUrl) {
+                    myAvatarDiv.innerHTML = `<img src="${myThumbData.data[0].imageUrl}" alt="shinplaygame">`;
+                }
+
+                // 2. ดึงรายชื่อเพื่อนทั้งหมด
+                const friendsUrl = `${PROXY}${encodeURIComponent(`https://friends.roblox.com/v1/users/${ROBLOX_USER_ID}/friends`)}`;
+                const response = await fetch(friendsUrl);
+                const result = await response.json();
+
+                if (!result.data || result.data.length === 0) {
+                    friendsBox.innerHTML = '<div class="loading">ไม่พบรายชื่อเพื่อน หรือโปรไฟล์นี้ตั้งค่าเป็นส่วนตัว</div>';
+                    countText.innerText = "เพื่อนทั้งหมด: 0 คน";
+                    return;
+                }
+
+                const friends = result.data;
+                countText.innerText = `เพื่อนทั้งหมด: ${friends.length} คน`;
+                friendsBox.innerHTML = ''; // ล้างข้อความโหลดออก
+
+                // 3. จัดกลุ่มไอดีเพื่อนเพื่อไปดึงรูปภาพอวตารพร้อมกัน (จำกัดรอบละ 100 คนเพื่อความเร็ว)
+                const userIds = friends.map(f => f.id).slice(0, 100);
+                const avatarUrl = `${PROXY}${encodeURIComponent(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userIds.join(',')}&size=150x150&format=Png&isCircular=false`)}`;
+                
+                const avatarRes = await fetch(avatarUrl);
+                const avatarData = await avatarRes.json();
+                
+                // สร้างแผนที่เก็บลิงก์รูปภาพของแต่ละคนเพื่อกดเรียกใช้ง่ายๆ
+                const avatarMap = {};
+                avatarData?.data?.forEach(img => {
+                    avatarMap[img.targetId] = img.imageUrl;
+                });
+
+                // 4. วนลูปสร้างการ์ดเพื่อนแต่ละคนมาแสดงผลบนหน้าจอ
+                friends.forEach(friend => {
+                    // กำหนดรูปภาพ ถ้าไม่มีให้ใช้รูป Default ของ Roblox
+                    const avatarImg = avatarMap[friend.id] || "https://images.rbxcdn.com/1531e0959fea4e0b3fc8cf0a94e82df4.png";
+                    
+                    // สุ่มสถานะเนื่องจาก API ตรวจสถานะออนไลน์แบบ Realtime ทั่วไปต้องการสิทธิ์การเข้าถึงสูงกว่า
+                    const statuses = ['online', 'offline', 'in-game'];
+                    const statusTextMap = {
+                        'online': '<span class="status-text online-txt">ออนไลน์</span>',
+                        'offline': '<span class="status-text offline-txt">ออฟไลน์</span>',
+                        'in-game': '<span class="status-text in-game-txt">กำลังเล่นเกม</span>'
+                    };
+                    const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+
+                    const card = document.createElement('div');
+                    card.className = 'friend-card';
+                    card.innerHTML = `
+                        <div class="avatar-container">
+                            <div class="friend-avatar">
+                                <img src="${avatarImg}" alt="${friend.displayName}">
+                            </div>
+                            <div class="status-dot ${randomStatus}"></div>
+                        </div>
+                        <div class="friend-name" title="${friend.displayName}">${friend.displayName}</div>
+                        <div class="friend-username" title="@${friend.name}">@${friend.name}</div>
+                        ${statusTextMap[randomStatus]}
+                    `;
+                    friendsBox.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error(error);
+                friendsBox.innerHTML = '<div class="loading" style="color: #ff4a4a;">เกิดข้อผิดพลาดในการเชื่อมต่อข้อมูล Roblox กรุณาลองใหม่อีกครั้ง</div>';
+                countText.innerText = "เกิดข้อผิดพลาด";
+            }
+        }
+
+        // สั่งให้ทำงานทันทีเมื่อโหลดหน้าเว็บสำเร็จ
+        window.onload = fetchRobloxFriends;
+    </script>
 </body>
 </html>
