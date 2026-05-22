@@ -3,274 +3,366 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox Friends - shinplaygame</title>
-    <!-- นำเข้า Font สไตล์โมเดิร์น -->
+    <title>Roblox User Profile Search</title>
+    <!-- นำเข้า Font Prompt เพื่อความสวยงามและอ่านง่าย -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- Reset & Base Styles --- */
+        :root {
+            --bg-color: #0b0c10;
+            --card-bg: #1f2833;
+            --primary-color: #45f3ff;
+            --text-color: #c5a059;
+            --text-light: #ffffff;
+            --text-muted: #858585;
+            --online-color: #00e676;
+            --offline-color: #757575;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Prompt', sans-serif;
         }
 
         body {
-            background-color: #0e1013; /* โทนสีมืดสไตล์ Gaming */
-            color: #ffffff;
+            background-color: var(--bg-color);
+            color: var(--text-light);
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 2rem;
         }
 
-        /* --- Main Container --- */
-        .container {
+        /* Container ส่วนค้นหา */
+        .search-container {
             width: 100%;
-            max-width: 950px;
-            background: rgba(25, 28, 34, 0.85);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-        }
-
-        /* --- Header Section --- */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .user-avatar {
-            width: 55px;
-            height: 55px;
-            background: linear-gradient(135deg, #00b4db, #0083b0);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: white;
-            box-shadow: 0 0 15px rgba(0, 180, 219, 0.4);
-        }
-
-        .user-info h1 {
-            font-size: 20px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-
-        .user-info p {
-            font-size: 13px;
-            color: #8a9099;
-            margin-top: 2px;
-        }
-
-        .friend-count {
-            background: rgba(255, 255, 255, 0.06);
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: 500;
-            color: #38ef7d;
-            border: 1px solid rgba(56, 239, 125, 0.2);
-        }
-
-        /* --- Grid System --- */
-        .friends-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        /* --- Friend Card Styles --- */
-        .friend-card {
-            background: #1d2129;
-            border-radius: 16px;
-            padding: 20px;
+            max-width: 800px;
+            margin-bottom: 2rem;
             text-align: center;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            position: relative;
+        }
+
+        .search-container h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ffffff, #858585);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            background: var(--card-bg);
+            padding: 8px;
+            border-radius: 50px;
+            border: 1px solid #2f3e46;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .search-box input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: white;
+            padding: 0 20px;
+            font-size: 1rem;
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-box button {
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-box button:hover {
+            background: #e0e0e0;
+            transform: scale(1.02);
+        }
+
+        /* Profile Card ส่วนแสดงผล */
+        .profile-card {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: 20px;
             overflow: hidden;
-            border: 1px solid transparent;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            border: 1px solid #2f3e46;
         }
 
-        .friend-card:hover {
-            transform: translateY(-5px);
-            background: #242933;
-            border-color: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        /* ส่วนหัวของโปรไฟล์ (Banner) */
+        .profile-header {
+            position: relative;
+            background: linear-gradient(135deg, #111726 0%, #1f2833 100%);
+            padding: 3rem 2rem 2rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            border-bottom: 1px solid #2f3e46;
         }
 
-        /* Avatar Container & Status Indicator */
+        @media (max-width: 600px) {
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+                padding-top: 2rem;
+            }
+        }
+
         .avatar-container {
             position: relative;
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 15px;
+            width: 150px;
+            height: 150px;
+            background: #151c24;
+            border-radius: 50%;
+            border: 4px solid #2f3e46;
+            overflow: hidden;
+            flex-shrink: 0;
         }
 
-        .friend-avatar {
+        .avatar-img {
             width: 100%;
             height: 100%;
-            background: #2a2f3b;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 32px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            object-fit: cover;
         }
 
+        /* จุดเขียวแสดงสถานะ Online/Offline */
         .status-dot {
             position: absolute;
-            bottom: 2px;
-            right: 2px;
-            width: 16px;
-            height: 16px;
+            bottom: 10px;
+            right: 10px;
+            width: 20px;
+            height: 20px;
+            background-color: var(--online-color);
             border-radius: 50%;
-            border: 3px solid #1d2129;
+            border: 3px solid var(--card-bg);
+            box-shadow: 0 0 10px var(--online-color);
         }
 
-        /* Dynamic Status Colors */
-        .online { background-color: #2ecc71; box-shadow: 0 0 10px #2ecc71; }
-        .offline { background-color: #95a5a6; }
-        .in-game { background-color: #00b4db; box-shadow: 0 0 10px #00b4db; }
+        .user-info {
+            flex-grow: 1;
+        }
 
-        /* Typography inside Cards */
-        .friend-name {
-            font-size: 15px;
+        .display-name {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* ตราสัญลักษณ์ Verified */
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            background-color: #00cdff;
+            color: #000;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .username {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        /* สถิติหลัก (Followers, Following, Friends) */
+        .user-stats {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .user-stats {
+                justify-content: center;
+            }
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
             font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* ส่วนเนื้อหาหลัก (About, Creations) */
+        .profile-body {
+            padding: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
             color: #ffffff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            border-left: 4px solid #ffffff;
+            padding-left: 10px;
         }
 
-        .friend-username {
-            font-size: 12px;
-            color: #8a9099;
-            margin-top: 3px;
-            margin-bottom: 12px;
+        .about-text {
+            font-size: 1rem;
+            color: #b3b3b3;
+            line-height: 1.6;
+            background: #151c24;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            white-space: pre-line;
         }
 
-        .status-text {
-            font-size: 12px;
+        /* ส่วนรายละเอียด ข้อมูลจำเพาะ */
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 150px));
+            gap: 1.5rem;
+        }
+
+        .meta-item {
+            background: #151c24;
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .meta-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .meta-value {
+            font-size: 1rem;
             font-weight: 500;
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.04);
-        }
-
-        .status-text.online-txt { color: #2ecc71; }
-        .status-text.offline-txt { color: #8a9099; }
-        .status-text.in-game-txt { color: #00b4db; font-weight: 600; }
-
-        /* --- Responsive Design --- */
-        @media (max-width: 500px) {
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-            .friend-count {
-                align-self: flex-end;
-            }
-            .friends-grid {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                gap: 12px;
-            }
-            .friend-card {
-                padding: 15px 10px;
-            }
-            .avatar-container {
-                width: 65px;
-                height: 65px;
-            }
+            color: var(--text-light);
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- ส่วนหัวแสดงโปรไฟล์หลัก -->
-        <div class="header">
-            <div class="user-profile">
-                <div class="user-avatar">S</div>
-                <div class="user-info">
-                    <h1>shinplaygame</h1>
-                    <p>Roblox Developer & Player</p>
-                </div>
-            </div>
-            <div class="friend-count">เพื่อนทั้งหมด: 4 คน</div>
-        </div>
-
-        <!-- ส่วนกริดรายชื่อเพื่อน -->
-        <div class="friends-grid">
-            
-            <!-- เพื่อนคนที่ 1: สถานะ กำลังเล่นเกม -->
-            <div class="friend-card">
-                <div class="avatar-container">
-                    <div class="friend-avatar">🦊</div>
-                    <div class="status-dot in-game"></div>
-                </div>
-                <div class="friend-name">xX_DarkKnight_Xx</div>
-                <div class="friend-username">@dark_knight2026</div>
-                <div class="status-text in-game-txt">ในเกม: Blox Fruits</div>
-            </div>
-
-            <!-- เพื่อนคนที่ 2: สถานะ ออนไลน์ -->
-            <div class="friend-card">
-                <div class="avatar-container">
-                    <div class="friend-avatar">🐱</div>
-                    <div class="status-dot online"></div>
-                </div>
-                <div class="friend-name">MochiNeko</div>
-                <div class="friend-username">@mochi_neko</div>
-                <div class="status-text online-txt">ออนไลน์</div>
-            </div>
-
-            <!-- เพื่อนคนที่ 3: สถานะ ออฟไลน์ -->
-            <div class="friend-card">
-                <div class="avatar-container">
-                    <div class="friend-avatar">🤖</div>
-                    <div class="status-dot offline"></div>
-                </div>
-                <div class="friend-name">BuildMaster_TH</div>
-                <div class="friend-username">@builder_th</div>
-                <div class="status-text offline-txt">ออฟไลน์เมื่อ 2 ชม.ที่แล้ว</div>
-            </div>
-
-            <!-- เพื่อนคนที่ 4: สถานะ กำลังเล่นเกม -->
-            <div class="friend-card">
-                <div class="avatar-container">
-                    <div class="friend-avatar">👑</div>
-                    <div class="status-dot in-game"></div>
-                </div>
-                <div class="friend-name">ZeedZaza</div>
-                <div class="friend-username">@zeed_zaza_pro</div>
-                <div class="status-text in-game-txt">ในเกม: BedWars</div>
-            </div>
-
+    <!-- ส่วนค้นหา (Search Bar) -->
+    <div class="search-container">
+        <h1>Roblox User Lookup</h1>
+        <div class="search-box">
+            <input type="text" id="usernameInput" placeholder="กรอกชื่อผู้ใช้ Roblox ที่ต้องการค้นหา..." value="Builderman">
+            <button onclick="searchUser()">ค้นหา</button>
         </div>
     </div>
 
+    <!-- ส่วนแสดงโปรไฟล์ (Profile Card) -->
+    <div class="profile-card" id="profileCard">
+        
+        <!-- Header: รูปประจำตัว ชื่อ และ Stat -->
+        <div class="profile-header">
+            <div class="avatar-container">
+                <!-- ใช้รูปภาพ Placeholder ที่มีลักษณะคล้าย Avatar ของ Roblox -->
+                <img class="avatar-img" id="avatarImg" src="https://images.rbxcdn.com/74d9e03d408eb864ec2826cfd40361fb.png" alt="Roblox Avatar">
+                <div class="status-dot" id="statusDot"></div>
+            </div>
+            
+            <div class="user-info">
+                <div class="display-name" id="displayName">
+                    Builderman <span class="verified-badge" id="verifiedBadge">✓</span>
+                </div>
+                <div class="username" id="username">@Builderman</div>
+                
+                <div class="user-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="statFriends">0</div>
+                        <div class="stat-label">เพื่อน</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="statFollowers">68M+</div>
+                        <div class="stat-label">ผู้ติดตาม</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="statFollowing">12</div>
+                        <div class="stat-label">กำลังติดตาม</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Body: ข้อมูลเกี่ยวกับฉัน และข้อมูลอื่นๆ -->
+        <div class="profile-body">
+            <div class="section-title">เกี่ยวกับ (About)</div>
+            <div class="about-text" id="aboutText">
+                Welcome to the Roblox profile page! 
+                This is a concept design for a Roblox user profile card using modern dark mode UI.
+            </div>
+
+            <div class="section-title">ข้อมูลผู้ใช้ (Statistics)</div>
+            <div class="meta-grid">
+                <div class="meta-item">
+                    <div class="meta-label">วันที่เข้าร่วม</div>
+                    <div class="meta-value" id="joinDate">08/05/2006</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">ยอดเข้าชมสถานที่</div>
+                    <div class="meta-value" id="placeVisits">1.2B+</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">สถานะบัญชี</div>
+                    <div class="meta-value" id="accountStatus">ผู้ดูแลระบบ</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ฟังก์ชันจำลองสำหรับการกดค้นหา (Mockup Search Feature)
+        function searchUser() {
+            const inputValue = document.getElementById('usernameInput').value.trim();
+            
+            if(inputValue === "") {
+                alert("กรุณากรอกชื่อผู้ใช้ก่อนทำการค้นหาครับ");
+                return;
+            }
+
+            // จุดนี้คุณสามารถเขียนฟังก์ชันดึงข้อมูลจาก Roblox Web API ได้ในอนาคต
+            // ในที่นี้จะจำลองการเปลี่ยนข้อมูลบนหน้าจอตามที่เสิร์ช
+            document.getElementById('displayName').innerHTML = inputValue + ' <span class="verified-badge">✓</span>';
+            document.getElementById('username').innerText = '@' + inputValue;
+            document.getElementById('aboutText').innerText = `สวัสดีครับ ผมคือ ${inputValue}! ยินดีที่ได้รู้จักทุกคนที่เข้ามาดูโปรไฟล์ของผมครับ สามารถทักทายหรือชวนไปเล่นเกมด้วยกันได้เลยครับ`;
+            
+            // สุ่มเปลี่ยนตัวเลขสถิติเพื่อให้เห็นการอัปเดตข้อมูล
+            document.getElementById('statFriends').innerText = Math.floor(Math.random() * 200);
+            document.getElementById('statFollowers').innerText = (Math.random() * 10).toFixed(1) + 'M';
+            document.getElementById('joinDate').innerText = '15/03/2018';
+            document.getElementById('placeVisits').innerText = Math.floor(Math.random() * 500) + 'K+';
+            document.getElementById('accountStatus').innerText = 'ผู้เล่นทั่วไป';
+        }
+    </script>
 </body>
 </html>
