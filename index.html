@@ -3,366 +3,261 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox User Profile Search</title>
-    <!-- นำเข้า Font Prompt เพื่อความสวยงามและอ่านง่าย -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <title>Roblox Live User Server Tracker</title>
     <style>
         :root {
-            --bg-color: #0b0c10;
-            --card-bg: #1f2833;
-            --primary-color: #45f3ff;
-            --text-color: #c5a059;
-            --text-light: #ffffff;
-            --text-muted: #858585;
-            --online-color: #00e676;
-            --offline-color: #757575;
+            --bg-dark: #0f1115;
+            --panel-bg: #181c24;
+            --panel-hover: #222834;
+            --text-main: #ffffff;
+            --text-muted: #8a96a8;
+            --roblox-red: #ff3344;
+            --status-online: #00e676;
+            --status-playing: #00b0ff;
         }
 
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Prompt', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-light);
+            background-color: var(--bg-dark);
+            color: var(--text-main);
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 2rem;
+            padding: 20px;
         }
 
-        /* Container ส่วนค้นหา */
-        .search-container {
+        .container {
             width: 100%;
-            max-width: 800px;
-            margin-bottom: 2rem;
-            text-align: center;
+            max-width: 550px;
+            background-color: var(--panel-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .search-container h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(45deg, #ffffff, #858585);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2 span {
+            color: var(--roblox-red);
+            font-weight: 800;
         }
 
         .search-box {
             display: flex;
             gap: 10px;
-            background: var(--card-bg);
-            padding: 8px;
-            border-radius: 50px;
-            border: 1px solid #2f3e46;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            margin-bottom: 25px;
         }
 
-        .search-box input {
+        input {
             flex: 1;
-            background: transparent;
-            border: none;
+            background-color: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 16px;
             outline: none;
-            color: white;
-            padding: 0 20px;
-            font-size: 1rem;
-        }
-
-        .search-box input::placeholder {
-            color: var(--text-muted);
-        }
-
-        .search-box button {
-            background: #ffffff;
-            color: #000000;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .search-box button:hover {
-            background: #e0e0e0;
-            transform: scale(1.02);
+        input:focus {
+            border-color: var(--roblox-red);
+            box-shadow: 0 0 10px rgba(255, 51, 68, 0.2);
         }
 
-        /* Profile Card ส่วนแสดงผล */
-        .profile-card {
-            width: 100%;
-            max-width: 800px;
-            background: var(--card-bg);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-            border: 1px solid #2f3e46;
+        button {
+            background-color: var(--roblox-red);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
         }
 
-        /* ส่วนหัวของโปรไฟล์ (Banner) */
-        .profile-header {
-            position: relative;
-            background: linear-gradient(135deg, #111726 0%, #1f2833 100%);
-            padding: 3rem 2rem 2rem 2rem;
+        button:hover {
+            background-color: #e02233;
+        }
+
+        /* Result Section */
+        .result-panel {
+            background-color: rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            padding: 20px;
+            display: none; /* ซ่อนไว้ก่อนเสิร์ช */
+            border: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .user-profile {
             display: flex;
             align-items: center;
-            gap: 2rem;
-            border-bottom: 1px solid #2f3e46;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        @media (max-width: 600px) {
-            .profile-header {
-                flex-direction: column;
-                text-align: center;
-                padding-top: 2rem;
-            }
-        }
-
-        .avatar-container {
+        .avatar-wrapper {
             position: relative;
-            width: 150px;
-            height: 150px;
-            background: #151c24;
-            border-radius: 50%;
-            border: 4px solid #2f3e46;
-            overflow: hidden;
-            flex-shrink: 0;
+            width: 64px;
+            height: 64px;
         }
 
-        .avatar-img {
+        .avatar {
             width: 100%;
             height: 100%;
+            background-color: #2a313e;
+            border-radius: 50%;
             object-fit: cover;
         }
 
-        /* จุดเขียวแสดงสถานะ Online/Offline */
         .status-dot {
             position: absolute;
-            bottom: 10px;
-            right: 10px;
-            width: 20px;
-            height: 20px;
-            background-color: var(--online-color);
+            bottom: 2px;
+            right: 2px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
-            border: 3px solid var(--card-bg);
-            box-shadow: 0 0 10px var(--online-color);
+            border: 2px solid var(--panel-bg);
         }
 
-        .user-info {
-            flex-grow: 1;
+        .status-dot.playing { background-color: var(--status-playing); }
+        .status-dot.online { background-color: var(--status-online); }
+
+        .user-info h3 {
+            font-size: 18px;
+            margin-bottom: 4px;
         }
 
-        .display-name {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--text-light);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* ตราสัญลักษณ์ Verified */
-        .verified-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 22px;
-            height: 22px;
-            background-color: #00cdff;
-            color: #000;
-            border-radius: 50%;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .username {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-        }
-
-        /* สถิติหลัก (Followers, Following, Friends) */
-        .user-stats {
-            display: flex;
-            gap: 1.5rem;
-            margin-top: 1rem;
-        }
-
-        @media (max-width: 600px) {
-            .user-stats {
-                justify-content: center;
-            }
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--text-light);
-        }
-
-        .stat-label {
-            font-size: 0.85rem;
+        .user-info p {
+            font-size: 14px;
             color: var(--text-muted);
         }
 
-        /* ส่วนเนื้อหาหลัก (About, Creations) */
-        .profile-body {
-            padding: 2rem;
+        /* Server & Game Detail */
+        .game-status-box {
+            background-color: var(--panel-hover);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
         }
 
-        .section-title {
-            font-size: 1.25rem;
+        .game-title {
             font-weight: 600;
-            margin-bottom: 0.75rem;
-            color: #ffffff;
-            border-left: 4px solid #ffffff;
-            padding-left: 10px;
+            font-size: 16px;
+            color: var(--status-playing);
+            margin-bottom: 5px;
         }
 
-        .about-text {
-            font-size: 1rem;
-            color: #b3b3b3;
+        .server-info {
+            font-size: 14px;
+            color: var(--text-muted);
             line-height: 1.6;
-            background: #151c24;
-            padding: 1.5rem;
-            border-radius: 12px;
-            margin-bottom: 2rem;
-            white-space: pre-line;
         }
 
-        /* ส่วนรายละเอียด ข้อมูลจำเพาะ */
-        .meta-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 150px));
-            gap: 1.5rem;
-        }
-
-        .meta-item {
-            background: #151c24;
-            padding: 1rem;
-            border-radius: 12px;
+        .btn-join {
+            display: block;
             text-align: center;
+            background-color: #00c853;
+            color: white;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background 0.2s;
         }
 
-        .meta-label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 0.25rem;
+        .btn-join:hover {
+            background-color: #00b248;
         }
 
-        .meta-value {
-            font-size: 1rem;
-            font-weight: 500;
-            color: var(--text-light);
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .show {
+            display: block;
+            animation: fadeIn 0.4s ease forwards;
         }
     </style>
 </head>
 <body>
 
-    <!-- ส่วนค้นหา (Search Bar) -->
-    <div class="search-container">
-        <h1>Roblox User Lookup</h1>
-        <div class="search-box">
-            <input type="text" id="usernameInput" placeholder="กรอกชื่อผู้ใช้ Roblox ที่ต้องการค้นหา..." value="Builderman">
-            <button onclick="searchUser()">ค้นหา</button>
-        </div>
+<div class="container">
+    <h2><span>ROBLOX</span> Server Tracker</h2>
+    
+    <div class="search-box">
+        <input type="text" id="usernameInput" placeholder="ใส่ชื่อ User ใน Roblox ที่นี่...">
+        <button onclick="trackUser()">ค้นหา</button>
     </div>
 
-    <!-- ส่วนแสดงโปรไฟล์ (Profile Card) -->
-    <div class="profile-card" id="profileCard">
-        
-        <!-- Header: รูปประจำตัว ชื่อ และ Stat -->
-        <div class="profile-header">
-            <div class="avatar-container">
-                <!-- ใช้รูปภาพ Placeholder ที่มีลักษณะคล้าย Avatar ของ Roblox -->
-                <img class="avatar-img" id="avatarImg" src="https://images.rbxcdn.com/74d9e03d408eb864ec2826cfd40361fb.png" alt="Roblox Avatar">
-                <div class="status-dot" id="statusDot"></div>
+    <!-- ส่วนแสดงผลลัพธ์ -->
+    <div class="result-panel" id="resultPanel">
+        <div class="user-profile">
+            <div class="avatar-wrapper">
+                <!-- ใช้รูป Placeholder จำลองรูปโปรไฟล์ Roblox -->
+                <img src="https://images.rbxcdn.com/2bbb810057e60934789531649989679f.png" alt="User Avatar" class="avatar">
+                <div class="status-dot playing"></div>
             </div>
-            
             <div class="user-info">
-                <div class="display-name" id="displayName">
-                    Builderman <span class="verified-badge" id="verifiedBadge">✓</span>
-                </div>
-                <div class="username" id="username">@Builderman</div>
-                
-                <div class="user-stats">
-                    <div class="stat-item">
-                        <div class="stat-value" id="statFriends">0</div>
-                        <div class="stat-label">เพื่อน</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="statFollowers">68M+</div>
-                        <div class="stat-label">ผู้ติดตาม</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="statFollowing">12</div>
-                        <div class="stat-label">กำลังติดตาม</div>
-                    </div>
-                </div>
+                <h3 id="displayUsername">Player_Name</h3>
+                <p id="userStatusText">กำลังเล่นเกมอยู่ (In-Game)</p>
             </div>
         </div>
 
-        <!-- Body: ข้อมูลเกี่ยวกับฉัน และข้อมูลอื่นๆ -->
-        <div class="profile-body">
-            <div class="section-title">เกี่ยวกับ (About)</div>
-            <div class="about-text" id="aboutText">
-                Welcome to the Roblox profile page! 
-                This is a concept design for a Roblox user profile card using modern dark mode UI.
-            </div>
-
-            <div class="section-title">ข้อมูลผู้ใช้ (Statistics)</div>
-            <div class="meta-grid">
-                <div class="meta-item">
-                    <div class="meta-label">วันที่เข้าร่วม</div>
-                    <div class="meta-value" id="joinDate">08/05/2006</div>
-                </div>
-                <div class="meta-item">
-                    <div class="meta-label">ยอดเข้าชมสถานที่</div>
-                    <div class="meta-value" id="placeVisits">1.2B+</div>
-                </div>
-                <div class="meta-item">
-                    <div class="meta-label">สถานะบัญชี</div>
-                    <div class="meta-value" id="accountStatus">ผู้ดูแลระบบ</div>
-                </div>
+        <div class="game-status-box">
+            <div class="game-title" id="gameName">[UPD] Blox Fruits</div>
+            <div class="server-info">
+                <p><strong>Server ID:</strong> <span id="serverId">4a8b9c2d-1234-5678-90ab-cdef12345678</span></p>
+                <p><strong>ผู้เล่นในเซิร์ฟเวอร์ขณะนี้:</strong> <span id="playerCount">11/12 คน</span></p>
+                <p><strong>ปิงเซิร์ฟเวอร์ (Ping):</strong> 84 ms</p>
             </div>
         </div>
 
+        <!-- ลิงก์ Deeplink สำหรับกดรันแอป Roblox เพื่อเข้าเซิร์ฟเวอร์ตามทันที -->
+        <a href="roblox://experiences/start?placeId=275391513&gameInstanceId=4a8b9c2d-1234-5678-90ab-cdef12345678" class="btn-join" id="joinLink">
+            กดเพื่อ Join Server ตามทันที
+        </a>
     </div>
+</div>
 
-    <script>
-        // ฟังก์ชันจำลองสำหรับการกดค้นหา (Mockup Search Feature)
-        function searchUser() {
-            const inputValue = document.getElementById('usernameInput').value.trim();
-            
-            if(inputValue === "") {
-                alert("กรุณากรอกชื่อผู้ใช้ก่อนทำการค้นหาครับ");
-                return;
-            }
-
-            // จุดนี้คุณสามารถเขียนฟังก์ชันดึงข้อมูลจาก Roblox Web API ได้ในอนาคต
-            // ในที่นี้จะจำลองการเปลี่ยนข้อมูลบนหน้าจอตามที่เสิร์ช
-            document.getElementById('displayName').innerHTML = inputValue + ' <span class="verified-badge">✓</span>';
-            document.getElementById('username').innerText = '@' + inputValue;
-            document.getElementById('aboutText').innerText = `สวัสดีครับ ผมคือ ${inputValue}! ยินดีที่ได้รู้จักทุกคนที่เข้ามาดูโปรไฟล์ของผมครับ สามารถทักทายหรือชวนไปเล่นเกมด้วยกันได้เลยครับ`;
-            
-            // สุ่มเปลี่ยนตัวเลขสถิติเพื่อให้เห็นการอัปเดตข้อมูล
-            document.getElementById('statFriends').innerText = Math.floor(Math.random() * 200);
-            document.getElementById('statFollowers').innerText = (Math.random() * 10).toFixed(1) + 'M';
-            document.getElementById('joinDate').innerText = '15/03/2018';
-            document.getElementById('placeVisits').innerText = Math.floor(Math.random() * 500) + 'K+';
-            document.getElementById('accountStatus').innerText = 'ผู้เล่นทั่วไป';
+<script>
+    function trackUser() {
+        const username = document.getElementById('usernameInput').value.trim();
+        if (username === "") {
+            alert("กรุณาใส่ชื่อผู้ใช้ก่อนค้นหาครับ");
+            return;
         }
-    </script>
+
+        // ส่วนนี้จำลองการดึงข้อมูลสำเร็จ (Mock Data) 
+        // ถ้าทำระบบจริง ข้อมูลตรงนี้จะถูกเปลี่ยนไปตามค่าที่ดึงมาจาก API หลังบ้าน
+        document.getElementById('displayUsername').innerText = username;
+        document.getElementById('gameName').innerText = "⚔️ [SEA 4] Blox Fruits";
+        document.getElementById('serverId').innerText = "rbx-srv-" + Math.floor(Math.random() * 1000000);
+        document.getElementById('playerCount').innerText = "9/12 คน";
+
+        // แสดงผลหน้าต่างข้อมูล
+        document.getElementById('resultPanel').classList.add('show');
+    }
+</script>
+
 </body>
 </html>
